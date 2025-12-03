@@ -12,7 +12,7 @@ class AuthController extends Controller
     /**
      * Muestra el formulario de login
      */
-    public function showLoginForm(){
+    public function showLoginForm() {
         return Inertia::render(component: 'login');
     }
 

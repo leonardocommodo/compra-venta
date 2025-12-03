@@ -30,9 +30,9 @@ const LoginPage = () => {
   }
 
   return (
-    <div className='flex flex-col items-center justify-center h-screen w-full'>
-        <h2 className='font-bold text-xl mb-4'>Iniciar sesión</h2>
-        <form onSubmit={handleSubmit} className='flex flex-col gap-2 w-full max-w-md px-3'>
+    <div className='flex flex-col items-center justify-center h-screen w-full px-4'>
+        <form onSubmit={handleSubmit} className='flex flex-col gap-2 w-full max-w-md px-3 shadow-xl border border-gray-100 p-6 rounded-lg'>
+            <h2 className='font-bold text-xl mb-4 text-center'>Iniciar sesión</h2>
             <Input 
               type="email" 
               name="email" 
