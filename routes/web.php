@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -12,6 +13,8 @@ Route::get('/', function () {
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
 Route::get('/admin/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
+
+Route::get('/admin/category', [CategoryController::class, 'showCategory'])->name('category');
 
 Route::post('/login', [AuthController::class, 'login']);
 
