@@ -7,7 +7,7 @@ use Inertia\Inertia;
 
 class ArticlesController extends Controller
 {
-    public function showArticles(){
-        return Inertia::render("admin/product/index");
+    public function showArticle(){
+        return Inertia::render("admin/articles/index");
     }
 }

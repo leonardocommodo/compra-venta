@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticlesController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
@@ -12,10 +13,12 @@ Route::get('/', function () {
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
-Route::get('/admin/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
+Route::get('/admin/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboardPage');
 
-Route::get('/admin/category', [CategoryController::class, 'showCategory'])->name('category');
+Route::get('/admin/category', [CategoryController::class, 'showCategory'])->name('categoryPage');
+
+Route::get('/admin/article', [ArticlesController::class, 'showArticle'])->name('articlePage');
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logoutPage');
