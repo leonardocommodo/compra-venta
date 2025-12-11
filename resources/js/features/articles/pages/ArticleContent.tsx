@@ -8,20 +8,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Article } from '../../domain/entities/Article';
-import { Button } from '@/components/ui/button';
+
+import { Article } from '@/models/Article';
+import { Category } from '@/models/Category';
+import { MeasurementUnit } from '@/models/MeasurementUnit';
+import CreateArticleDialog from '../dialog/create-article';
+
 
 interface Props {
   articles: Article[];
+  categories: Category[];
+  measurementUnits: MeasurementUnit[];
 }
 
 
-export const ArticleContent = ({ articles }: Props) => {
-  console.log(articles)
+export const ArticleContent = ({ articles, categories, measurementUnits }: Props) => {
+  console.log(categories);
+  console.log(measurementUnits);
   return (
     <AdminLayout>
       <div className='flex justify-end'>
-        <Button className='mb-2 cursor-pointer'>Crear nuevo articulo</Button>
+        < CreateArticleDialog categories={categories} measurementUnits={measurementUnits} />
       </div>
       <Card>
         <CardHeader>

@@ -35,7 +35,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Article } from "../../domain/entities/Article"
+import { Article } from "@/models/Article"
+
 
 
 interface Props {

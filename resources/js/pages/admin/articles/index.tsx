@@ -1,14 +1,18 @@
-import { AdminLayout } from '@/components/layouts/adminLayout'
-import { Article } from '@/features/articles/domain/entities/Article'
-import { ArticleContent } from '@/features/articles/presentation/pages/ArticleContent'
+import { Article } from '@/models/Article'
+import { Category } from '@/models/Category';
+import { MeasurementUnit } from '@/models/MeasurementUnit';
+import { ArticleContent } from '@/features/articles/pages/ArticleContent';
 
-interface Props{
+
+interface Props {
   articles: Article[];
+  categories: Category[];
+  measurementUnits: MeasurementUnit[];
 }
 
-const ArticlesPage = ({ articles }: Props) => {  
+const ArticlesPage = ({ articles, categories, measurementUnits }: Props) => {
   return (
-    <ArticleContent articles={ articles } />
+    <ArticleContent articles={articles} categories={categories} measurementUnits={measurementUnits} />
   )
 }
 
