@@ -1,11 +1,14 @@
 import { AdminLayout } from '@/components/layouts/adminLayout'
+import { Article } from '@/features/articles/domain/entities/Article'
 import { ArticleContent } from '@/features/articles/presentation/pages/ArticleContent'
 
-import React from 'react'
+interface Props{
+  articles: Article[];
+}
 
-const ArticlesPage = () => {
+const ArticlesPage = ({ articles }: Props) => {  
   return (
-    <ArticleContent />
+    <ArticleContent articles={ articles } />
   )
 }
 
