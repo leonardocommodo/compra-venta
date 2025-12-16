@@ -15,6 +15,8 @@ class Article extends Model
         'min_stock',
         'cost_price',
         'sell_price',
+        'category_id',
+        'measurement_unit_id',
         'status',
     ];
 

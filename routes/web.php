@@ -22,3 +22,7 @@ Route::get('/admin/article', [ArticlesController::class, 'showArticle'])->name('
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logoutPage');
+
+
+/* endoints */
+Route::post('/articles', [ArticlesController::class, 'store'])->name('store');

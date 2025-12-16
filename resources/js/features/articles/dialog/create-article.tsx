@@ -18,12 +18,20 @@ interface Props {
 
 export function CreateArticleDialog({ categories, measurementUnits }: Props) {
     const formSchema = z.object({
-        code: z.string().nonempty().min(3, 'El código debe tener al menos 3 caracteres').max(10, 'El código debe tener como máximo 10 caracteres'),
-        name: z.string().nonempty().min(10, 'El nombre debe tener al menos 10 caracteres').max(50, 'El nombre debe tener como máximo 50 caracteres'),
-        minStock: z.number().min(0, 'El stock mínimo no puede ser negativo'),
-        stock: z.number().min(0, 'El stock no puede ser negativo'),
-        salePrice: z.number().min(0, 'El precio de venta no puede ser negativo'),
-        costPrice: z.number().min(0, 'El precio de compra no puede ser negativo'),
+        code: z
+            .string()
+            .nonempty('El código es obligatorio')
+            .min(3, 'El código debe tener al menos 3 caracteres')
+            .max(10, 'El código debe tener como máximo 10 caracteres'),
+        name: z
+            .string()
+            .nonempty('El nombre es obligatorio')
+            .min(10, 'El nombre debe tener al menos 10 caracteres')
+            .max(50, 'El nombre debe tener como máximo 50 caracteres'),
+        minStock: z.coerce.number().min(0, 'El stock mínimo no puede ser negativo'),
+        stock: z.coerce.number().min(0, 'El stock no puede ser negativo'),
+        salePrice: z.coerce.number().min(0, 'El precio de venta no puede ser negativo'),
+        costPrice: z.coerce.number().min(0, 'El precio de compra no puede ser negativo'),
         categoryId: z.string().nonempty('Debe seleccionar una categoría'),
         measurementUnitId: z.string().nonempty('Debe seleccionar una unidad de medida'),
     });
@@ -41,23 +49,41 @@ export function CreateArticleDialog({ categories, measurementUnits }: Props) {
         },
     });
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data);
-        toast('You submitted the following values:', {
-            description: (
-                <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-                    <code>{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-            position: 'bottom-right',
-            classNames: {
-                content: 'flex flex-col gap-2',
-            },
-            style: {
-                '--border-radius': 'calc(var(--radius)  + 4px)',
-            } as React.CSSProperties,
-        });
-    }
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        const payload = {
+            code: data.code,
+            name: data.name,
+            min_stock: Number(data.minStock),
+            stock: Number(data.stock),
+            sell_price: Number(data.salePrice),
+            cost_price: Number(data.costPrice),
+            category_id: Number(data.categoryId),
+            measurement_unit_id: Number(data.measurementUnitId),
+        };
+
+        try {
+            const response = await fetch('/articles', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                },
+                credentials: 'same-origin', // 🔥 IMPORTANTE
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al crear el artículo');
+            }
+
+            toast.success('Artículo creado correctamente');
+
+            form.reset();
+        } catch (error) {
+            console.log(error);
+            toast.error('Error al crear el artículo');
+        }
+    };
 
     return (
         <DialogWrapper
@@ -119,10 +145,10 @@ export function CreateArticleDialog({ categories, measurementUnits }: Props) {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="code">Stock mínimo</FieldLabel>
                                         <Input
-                                            {...field}
                                             id="form-rhf-demo-title"
                                             aria-invalid={fieldState.invalid}
-                                            defaultValue={10}
+                                            value={field.value}
+                                            onChange={(e) => field.onChange(e.target.value === '' ? '' : Number(e.target.value))}
                                             type="number"
                                             min={0}
                                             autoComplete="off"
@@ -140,10 +166,10 @@ export function CreateArticleDialog({ categories, measurementUnits }: Props) {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="code">Stock</FieldLabel>
                                         <Input
-                                            {...field}
                                             id="form-rhf-demo-title"
                                             aria-invalid={fieldState.invalid}
-                                            defaultValue={0}
+                                            value={field.value}
+                                            onChange={(e) => field.onChange(e.target.value === '' ? '' : Number(e.target.value))}
                                             type="number"
                                             min={0}
                                             autoComplete="off"
@@ -161,10 +187,10 @@ export function CreateArticleDialog({ categories, measurementUnits }: Props) {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="code">Precio de venta</FieldLabel>
                                         <Input
-                                            {...field}
                                             id="form-rhf-demo-title"
                                             aria-invalid={fieldState.invalid}
-                                            defaultValue={0}
+                                            value={field.value}
+                                            onChange={(e) => field.onChange(e.target.value === '' ? '' : Number(e.target.value))}
                                             type="number"
                                             min={0}
                                             autoComplete="off"
@@ -182,10 +208,10 @@ export function CreateArticleDialog({ categories, measurementUnits }: Props) {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="code">Precio de compra</FieldLabel>
                                         <Input
-                                            {...field}
                                             id="form-rhf-demo-title"
                                             aria-invalid={fieldState.invalid}
-                                            defaultValue={0}
+                                            value={field.value}
+                                            onChange={(e) => field.onChange(e.target.value === '' ? '' : Number(e.target.value))}
                                             type="number"
                                             min={0}
                                             autoComplete="off"
@@ -201,9 +227,9 @@ export function CreateArticleDialog({ categories, measurementUnits }: Props) {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="category">Categorías</FieldLabel>
-                                        <Select>
-                                            <SelectTrigger {...field} id="category" className="w-full">
+                                        <FieldLabel htmlFor="categoryId">Categorías</FieldLabel>
+                                        <Select name={field.name} onValueChange={field.onChange} value={field.value}>
+                                            <SelectTrigger id="categoryId" className={`w-full ${fieldState.invalid ? 'border-destructive' : ''}`}>
                                                 <SelectValue placeholder="Seleccione una categoria" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -225,9 +251,12 @@ export function CreateArticleDialog({ categories, measurementUnits }: Props) {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="measurementUnit">Unidad de medida</FieldLabel>
-                                        <Select>
-                                            <SelectTrigger {...field} id="measurementUnit" className="w-full">
+                                        <FieldLabel htmlFor="measurementUnitId">Unidad de medida</FieldLabel>
+                                        <Select name={field.name} onValueChange={field.onChange} value={field.value}>
+                                            <SelectTrigger
+                                                id="measurementUnitId"
+                                                className={`w-full ${fieldState.invalid ? 'border-destructive' : ''}`}
+                                            >
                                                 <SelectValue placeholder="Seleccione una unidad de medida" />
                                             </SelectTrigger>
                                             <SelectContent>

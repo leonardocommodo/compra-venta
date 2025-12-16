@@ -3,6 +3,7 @@ import '../css/app.css';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
+import { Toaster } from '@/components/ui/sonner';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -12,7 +13,13 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+            <>
+                <meta name="csrf-token" content="{{ csrf_token() }}" />
+                <App {...props} />
+                <Toaster />
+            </>,
+        );
     },
     progress: {
         color: '#4B5563',
